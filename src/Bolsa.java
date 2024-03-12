@@ -47,9 +47,12 @@ public class Bolsa {
     }
 
     public void sacarProducto(Producto producto) {
-        for (int i = 0; i < cantidad; i++) {
-            if (productos[i].equals(producto)) {
-                productos[i] = null;
+        for (int i = 0; i <= cantidad; i++) {
+            if (productos[i] == producto) {
+                for (int j = i; j < cantidad; j++) {
+                    productos[j] = productos[j + 1];
+                }
+                productos[cantidad] = null;
                 cantidad--;
                 break;
             }
@@ -65,23 +68,28 @@ public class Bolsa {
     }
 
     public boolean comprarTodosLosProductos(Monedero monedero) {
-        if (monedero.getSaldo() >= calcularPrecioTotal()) {
-            monedero.setSaldo(monedero.getSaldo() - calcularPrecioTotal());
-            for (int i = 0; i < cantidad; i++) {
-                productos[i] = null;
-            }
-            cantidad = -1;
-            return true;
-        }
-        return false;
-    }
+        boolean purchased = false;
+        int totalPrice = calcularPrecioTotal();
 
+        if (monedero.getSaldo() >= totalPrice) {
+            for (int i = 0; i <= cantidad; i++) {
+                monedero.setSaldo(monedero.getSaldo() - productos[i].getPrecio());
+                sacarProducto(productos[i]);
+            }
+            purchased = true;
+        } else if (monedero.getSaldo() >= productos[0].getPrecio()) {
+            monedero.setSaldo(monedero.getSaldo() - productos[0].getPrecio());
+            sacarProducto(productos[0]);
+            purchased = true;
+        }
+
+        return purchased;
+    }
+    
     public boolean seEncuentraElProducto(String nombre) {
         for (int i = 0; i < cantidad; i++) {
-
             String nombreCompleto = productos[i].getNombre();
-            String[] primerPalabra = nombreCompleto.split(" ");
-            if (primerPalabra[0].equals(nombre)) {
+            if (nombreCompleto.equals(nombre)) {
                 return true;
             }
         }
@@ -96,7 +104,7 @@ public class Bolsa {
             }
         }
 
-        return cant;
+        return cant + 1;
     }
 
     public int cantidadEnEspecificoDeUnProducto(String nombre) {
@@ -125,7 +133,7 @@ public class Bolsa {
 
     public int cuantosProductosDeTipo(Producto.Tipo tipo) {
         int cant = 0;
-        for (int i = 0; i < cantidad; i++) {
+        for (int i = 0; i <= cantidad; i++) {
             if (productos[i].getTipo().equals(tipo)) {
                 cant++;
             }

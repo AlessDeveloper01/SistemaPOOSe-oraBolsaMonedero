@@ -67,7 +67,7 @@ public class Persona {
     }
 
     public void cuantoProductosHayDe(String nombre) {
-        System.out.println("Total de productos en la bolsa: " + bolsa.cuantosProductosHayEnLaBolsa());
+        System.out.println("Total de productos en la bolsa: " + bolsa.cantidadEnEspecificoDeUnProducto(nombre));
     }
 
     public void cantidadRestanteEnMonedero() {
